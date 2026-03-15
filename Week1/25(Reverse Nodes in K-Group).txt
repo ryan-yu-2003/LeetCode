@@ -1,0 +1,42 @@
+# Definition for singly-linked list.
+# class ListNode:
+#     def __init__(self, val=0, next=None):
+#         self.val = val
+#         self.next = next
+class Solution:
+    def reverseKGroup(self, head: Optional[ListNode], k: int) -> Optional[ListNode]:
+        dummy=ListNode(0)
+        dummy.next=head
+        a=dummy # a 永遠站在準備要反轉的那組的正前方
+        while True:
+            kth=self.getKth(a,k)
+            if not kth:
+                break
+            #先把下一個k組的head記住等等要接
+            pre=kth.next
+            curr=a.next
+
+            for i in range(k):
+                next_node=curr.next
+                curr.next=pre
+                pre=curr
+                curr=next_node
+            tail=a.next
+            a.next=kth
+            a=tail
+
+        return dummy.next
+            
+    def getKth(self, curr, k):
+        for _ in range(k):
+            if curr is None:
+                return None
+            curr = curr.next
+        return curr
+''' 
+Note
+dummy ：建立的節點，接在真正的 head 前面。用來消除第一組前面沒有節點，最後回傳 dummy.next 
+a ：永遠在即將要反轉的那組車廂的正前方。處理完一組後，會移動到那組的tail上。
+kth ：找到的目標，也就是這組反轉過後的new head。
+tail ：這組原本的頭 (a.next)。反轉後會變成這組的尾巴。
+'''
