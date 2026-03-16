@@ -1,0 +1,76 @@
+import heapq
+from typing import List
+
+class Solution:
+    def minimumPairRemoval(self, nums: List[int]) -> int:
+        N = len(nums)
+        if N <= 1: 
+            return 0
+        
+        # === 1. 初始化 ===
+        # 使用兩個陣列模擬double linked list，紀錄左右鄰居
+        left = [i - 1 for i in range(N)]
+        right = [i + 1 for i in range(N)]
+        
+        pq = []
+        #不符合non-decreasing的數量
+        bad_pairs = 0
+        #紀錄nums中那些數已經被遺棄 
+        deleted = [False] * N
+        
+        # === 2. 初始狀態掃描 ===
+        for i in range(N - 1):
+            if nums[i] > nums[i + 1]:
+                bad_pairs += 1
+            # 存入 (sum, 左邊索引, 右邊索引)
+            heapq.heappush(pq, (nums[i] + nums[i + 1], i, i + 1))
+            
+        ans = 0
+        
+        # === 3.當bad_pairs不是0就繼續合併 ===
+        while bad_pairs > 0:
+            # 拿出當前最小和的組合
+            sum_val, i, j = heapq.heappop(pq)#heap保證第一個是最小的省去排序時間
+            
+            #前一輪已經用過的數字的加總不會被誤拿，可以免去每一輪都清空heap重新算sum 
+            if deleted[i] or deleted[j] or nums[i] + nums[j] != sum_val:
+                continue
+                
+            # 確定要合併 j 到 i 裡面，把 j 標記為刪除
+            deleted[j] = True
+            ans += 1
+            
+            # 找出 i 的左鄰居和 j 的右鄰居
+            prev_i = left[i]
+            next_j = right[j]
+            
+            # --- A. 扣除舊的bad_pair數量 ---
+            if prev_i != -1 and nums[prev_i] > nums[i]:
+                bad_pairs -= 1
+            if nums[i] > nums[j]:
+                bad_pairs -= 1
+            if next_j != N and nums[j] > nums[next_j]:
+                bad_pairs -= 1
+                
+            # --- B. 合併 ---
+            nums[i] += nums[j]
+            
+            # --- C. 重新計算新的bad_pair，並產生新的相鄰組合加入 Heap ---
+            #加完之後的數和左邊比大小
+            if prev_i != -1:
+                if nums[prev_i] > nums[i]:
+                    bad_pairs += 1
+                heapq.heappush(pq, (nums[prev_i] + nums[i], prev_i, i))
+            #加完之後的數和右邊比大小
+            if next_j != N:
+                if nums[i] > nums[next_j]:
+                    bad_pairs += 1
+                heapq.heappush(pq, (nums[i] + nums[next_j], i, next_j))
+                
+            # --- D. 更新雙向鏈結串列的指標 (瞬間刪除 j) ---
+            #用來更新left 、right的位置
+            right[i] = next_j
+            if next_j != N:
+                left[next_j] = i
+                
+        return ans
