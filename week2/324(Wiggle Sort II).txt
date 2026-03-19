@@ -1,0 +1,9 @@
+class Solution:
+    def wiggleSort(self, nums: List[int]) -> None:
+        nums.sort()
+        mid=(1+len(nums))//2
+        left=nums[:mid]
+        right=nums[mid:]
+        #交叉穿插進去而且為了避免中位數的數字導致會有相同的數字放在一起所以先反轉再穿插
+        nums[::2]=left[::-1]
+        nums[1::2]=right[::-1]
