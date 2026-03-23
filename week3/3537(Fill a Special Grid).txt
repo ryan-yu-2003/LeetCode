@@ -1,0 +1,42 @@
+class Solution:
+    def specialGrid(self, n: int) -> List[List[int]]:
+        # 計算矩陣的實際邊長 2^n
+        size = 2 ** n
+        
+        # 初始化 2^n x 2^n 的二維陣列，預設填入 0
+        grid = [[0] * size for _ in range(size)]
+        
+        # 遞迴函數：處理左上角起點為 (row, col)，邊長為 current_size 的子矩陣
+        # start_val 表示該子矩陣被分配到的起始數字
+        def fill_grid(row, col, current_size, start_val):
+            
+            # Base case: 當子矩陣切分到大小為 1x1 時，填入當前數字並返回
+            if current_size == 1:
+                grid[row][col] = start_val
+                return
+            
+            # 計算四等分後的子矩陣邊長
+            half = current_size // 2
+            
+            # 計算每個象限包含的格子數，作為分配數字的offset
+            offset = half * half
+            
+            # 根據題目要求的大小順序，依序遞迴處理四個象限：
+            
+            # 右上象限行不變，列往右移
+            fill_grid(row, col + half, half, start_val)
+            
+            # 右下象限行往下移，列往右移
+            fill_grid(row + half, col + half, half, start_val + offset)
+            
+            #左下象限行往下移，列不變
+            fill_grid(row + half, col, half, start_val + 2 * offset)
+            
+            #左上象限行不變，列不變
+            fill_grid(row, col, half, start_val + 3 * offset)
+
+        #從座標 (0, 0) 開始，傳入完整邊長，起始數字為 0
+        fill_grid(0, 0, size, 0)
+        
+        return grid
+        
