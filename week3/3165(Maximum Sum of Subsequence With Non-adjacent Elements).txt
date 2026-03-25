@@ -1,0 +1,71 @@
+class Solution:
+    def maximumSumSubsequence(self, nums: List[int], queries: List[List[int]]) -> int:
+        n = len(nums)
+        MOD = 10**9 + 7
+        
+        # tree[o] 儲存 4 個狀態: [00都不選, 01選尾, 10選頭, 11都選]
+        # 大小開 4 * n 是線段樹的標準空間要求
+        tree = [[0] * 4 for _ in range(4 * n)]
+        
+        # 合併左右子節點的函數 (PushUp)
+        def maintain(o):
+            #把每一層的人，按照順序一個一個塞進陣列裡
+            l = o * 2      # 左子節點 index
+            r = o * 2 + 1  # 右子節點 index
+            
+            #頭尾都不選
+            tree[o][0] = max(tree[l][0] + tree[r][0], tree[l][0] + tree[r][2], tree[l][1] + tree[r][0])
+            #選尾
+            tree[o][1] = max(tree[l][0] + tree[r][1], tree[l][0] + tree[r][3], tree[l][1] + tree[r][1])
+            #選頭
+            tree[o][2] = max(tree[l][2] + tree[r][0], tree[l][2] + tree[r][2], tree[l][3] + tree[r][0])
+            #都選
+            tree[o][3] = max(tree[l][2] + tree[r][1], tree[l][2] + tree[r][3], tree[l][3] + tree[r][1])
+
+        # 初始化建立線段樹
+        def build(o, left, right):
+            if left == right:
+                # 葉節點初始化
+                tree[o][0] = 0
+                tree[o][1] = float('-inf')
+                tree[o][2] = float('-inf')
+                #唯一會變的狀態
+                tree[o][3] = nums[left]
+                return
+            
+            mid = (left + right) // 2
+            build(o * 2, left, mid)
+            build(o * 2 + 1, mid + 1, right)
+            maintain(o)
+            
+        # 單點更新
+        def update(o, left, right, idx, val):
+            if left == right:
+                # 更新單一元素，只有 11 狀態會受影響
+                tree[o][3] = val
+                return
+            
+            mid = (left + right) // 2
+            if idx <= mid:
+                update(o * 2, left, mid, idx, val)
+            else:
+                update(o * 2 + 1, mid + 1, right, idx, val)
+            
+            # 子節點更新後，向上更新父節點
+            maintain(o)
+
+        if not nums:
+            return 0
+            
+        #建立初始線段樹
+        build(1, 0, n - 1)
+        
+        total_sum = 0
+        #處理每個 query
+        for pos, x in queries:
+            update(1, 0, n - 1, pos, x)
+            # 整個陣列的最佳解，就是根節點 (index 1) 中 4 個狀態的最大值
+            max_val = max(tree[1])
+            total_sum = (total_sum + max_val) % MOD
+            
+        return total_sum    
