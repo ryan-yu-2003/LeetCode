@@ -1,0 +1,17 @@
+class Solution:
+    def searchMatrix(self, matrix: List[List[int]], target: int) -> bool:
+        #從右上角開始走
+        n=len(matrix[0])
+        m=len(matrix)
+        a=0
+        b=n-1
+        while a<m and b>=0:
+            x=matrix[a][b]
+            if target> x:
+                a+=1
+            elif target < x:
+                b-=1
+            else:
+                return True
+        return False 
+        "最多就只會從右上角走到左下角然後找到或是沒找到，O(M+N-1)=O(M+N)"
