@@ -1,0 +1,28 @@
+class Solution:
+    def getSkyline(self, buildings: List[List[int]]) -> List[List[int]]:
+        #存building 資訊
+        event=[]
+        #存輸出
+        res=[[0,0]]
+        for l,r,h in buildings:
+            event.append((l,-h,r))
+            event.append((r,h,0))
+        event.sort()
+        #heap用來記錄高度和右邊屆
+        heap=[(0,float('inf'))]
+        for x,h,r in event:
+            if h<0:
+                heapq.heappush(heap,(h,r))
+            
+            #用lazy delet 把右邊邊界跑完的高度刪除
+
+            while heap[0][1]<=x:
+                heapq.heappop(heap)
+
+            max_h=-heap[0][0]
+            if max_h!=res[-1][1]:
+                res.append([x,max_h])
+        return res[1:]
+#time complexity:O(nlogn)
+#space complexity:O(n)
+        
