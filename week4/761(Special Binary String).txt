@@ -1,0 +1,24 @@
+class Solution:
+    def makeLargestSpecial(self, s: str) -> str:
+        mountain=[]
+        left=0
+        count=0
+        for i ,char in enumerate(s):
+            if char=="1":
+                count+=1
+            else :
+                count-=1
+            if count==0:
+                #切斷包含i
+                mountain_s=s[left:i+1]
+                #把外層1,0撥開遞迴
+                sorted_inner = self.makeLargestSpecial(mountain_s[1:-1])
+                #把外層補回去
+                mountain.append('1' + sorted_inner + '0')
+
+                left=i+1
+        #把比較大的放在前面
+        mountain.sort(reverse=True)
+        return "".join(mountain)
+        #time complexity:O(N^2)
+        #space complexity:O(N)
