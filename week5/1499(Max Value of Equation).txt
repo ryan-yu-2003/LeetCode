@@ -1,6 +1,7 @@
 class Solution:
     def findMaxValueOfEquation(self, points: List[List[int]], k: int) -> int:
         '''Time Complexity:O(N)'''
+        '''Space Complexity:O(N)'''
         #yi+yj+|xi-xj|=yj+xj+yi-xi,因為xj>xi
         q=deque() #用來存(yi-xi,x)
         value=float("-inf")
