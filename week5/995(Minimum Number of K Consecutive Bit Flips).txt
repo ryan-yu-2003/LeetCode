@@ -1,0 +1,45 @@
+class Solution:
+    def minKBitFlips(self, nums: List[int], k: int) -> int:
+        '''
+        time complexity:O(N*K)
+        space complexity:O(1)
+        n = len(nums)
+        ans = 0
+        
+        for i in range(n):
+            if nums[i] == 0:
+                # 剩下的長度不夠 k 個，代表無解
+                if i + k > n:
+                    return -1
+                
+                # 從 i 開始的連續 k 個數字翻轉
+                for j in range(i, i + k):
+                    nums[j] ^= 1   # 0變1, 1變0
+                
+                
+                ans += 1
+                
+        return ans
+        '''
+        '''
+        時間複雜度縮減成O(N)
+        空間複雜度變成O(K),K是這個queue的長度
+        '''
+        n=len(nums)
+        ans=0
+        #記錄翻轉的最後位置，queue的長度就是只被翻幾次
+        queue=deque()
+        for i in range (n):
+            if queue and queue[0]<i:
+                #表示當前位置已經不受之前翻轉影響
+                queue.popleft()
+            #0翻轉偶數次還是0
+            #1翻轉奇數次會變成0
+            #遇到0我們就要翻轉
+            if nums[i]==(len(queue)%2):
+                if i+k>n:
+                    return -1
+                queue.append(i+k-1)
+                ans+=1
+        return ans
+        
