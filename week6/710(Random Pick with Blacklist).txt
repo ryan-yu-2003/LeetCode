@@ -1,0 +1,29 @@
+class Solution:
+
+    def __init__(self, n: int, blacklist: List[int]):
+        #set查找快
+        self.b=set(blacklist)
+        self.m={}
+        self.length=n-len(blacklist)
+
+        #不是黑名單的數字方在這塊等等要mapping用
+        safe_backup=[]
+        for i in range(self.length, n):
+            if i not in self.b:
+                safe_backup.append(i)
+                
+        for b in blacklist:
+            #b會被抽到
+            if b < self.length:
+                #映射值在safe_backup裡
+                self.m[b] = safe_backup.pop()
+
+    def pick(self) -> int:
+        pick_num = random.randint(0, self.length - 1)
+        if pick_num in self.b:
+            return self.m[pick_num]
+
+        else:
+            return pick_num
+'''時間複雜度和空間複雜度是O(B),B是blacklist的長度'''
+

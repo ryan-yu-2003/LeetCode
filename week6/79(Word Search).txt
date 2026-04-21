@@ -1,0 +1,33 @@
+class Solution:
+    def exist(self, board: List[List[str]], word: str) -> bool:
+        #邏輯：掃過所有點找起始點再去從起始點開始找鄰居完成word。
+        #這題測資小所以時間複雜度O(n*m*4^k)還可以接受，空間複雜度O(k),k是word長度
+        row=len(board)
+        col=len(board[0])
+        def dfs(r,c,index):
+            if index==len(word):
+                return True
+            if r<0 or r>=row or c<0 or c>=col or board[r][c]!=word[index]:
+                return False
+            temp=board[r][c]
+            board[r][c]='#' #把走過的路改成#
+            #朝四個方向走
+            res=(dfs(r+1,c,index+1) or
+            dfs(r,c+1,index+1) or 
+            dfs(r-1,c,index+1) or
+            dfs(r,c-1,index+1))
+            #把字復原
+            board[r][c]=temp
+
+            return res
+
+        #掃描整個先找到首字
+        for i in range(row):
+            for j in range(col):
+                if board[i][j]==word[0]:
+                    if dfs(i,j,0):
+                        return True
+
+        return False
+
+

@@ -1,0 +1,13 @@
+class Solution:
+    def findMin(self, nums: List[int]) -> int:
+        #掃過一遍去看如果比前面小就是最小，如果都沒有表示最小在第一個
+        #時間複雜度O(N)，空間複雜度O(1)
+        for i in range(len(nums)-1):
+            if nums[i]>nums[i+1]:
+                return nums[i+1]
+
+        return nums[0]
+
+        '''也可以用binary serch 來寫，看右邊如果比中間大表示最小值會在中間或是左邊，但其實binary search 的bad case，ex[1,0,1,1,1]也是要O(n)'''
+
+        
