@@ -1,0 +1,25 @@
+class Solution:
+    def jump(self, nums: List[int]) -> int:
+        '''
+        時間複雜度：O(n)
+        空間複雜度：O(1)
+        '''
+        n=len(nums)
+        if n <= 1:
+            return 0
+        jumps = 0          
+        current_end = 0    # 目前這一跳的極限位置
+        farthest = 0       # 極限距離
+        
+        for i in range(len(nums) - 1):
+            
+            # 沿路更新能摸到的最遠距離
+            farthest = max(farthest, i + nums[i])
+            
+            # 如果走到了這一跳的極限就要jump,更新
+            if i == current_end:
+                jumps += 1               # 跳躍次數 +1
+                current_end = farthest   # 更新下一跳的極限位置
+
+        return jumps
+        

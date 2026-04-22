@@ -1,0 +1,25 @@
+class Solution:
+    def maxPerformance(self, n: int, speed: List[int], efficiency: List[int], k: int) -> int:
+        '''
+        時間複雜度O(NlogN)
+        空間複雜度O(N+k),k是min_heap的大小
+        '''
+        #performance=sum(speed)*min(efficiency)
+        #固定efficiency去找speed的最佳值
+        # zip 會把對應位置的元素打包成 tuple: (efficiency, speed)
+        engineers = sorted(zip(efficiency, speed), reverse=True)
+        
+        min_heap = []       # 用來裝速度
+        speed_sum = 0       # 記錄當前總速度
+        max_perf = 0        # 記錄歷史最高
+
+        for curr_eff,curr_speed in engineers:
+            heapq.heappush(min_heap,curr_speed)
+            speed_sum+=curr_speed
+            if len(min_heap)>k:
+                slowest=heapq.heappop(min_heap)
+                speed_sum-=slowest
+            #因為efficiency由大到小排序所以curr_eff一定是最小的
+            max_perf=max(max_perf,speed_sum*curr_eff)
+
+        return max_perf%(10**9+7)
