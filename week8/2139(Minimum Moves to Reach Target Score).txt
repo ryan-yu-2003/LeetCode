@@ -1,0 +1,19 @@
+class Solution:
+    def minMoves(self, target: int, maxDoubles: int) -> int:
+        #逆推回去，從target走到1，遇到偶數就用double因為數字大用double效益最好，剛好又是逆著回去
+        a=0 #記錄走幾步
+        while target>1:
+            if target%2!=0:
+                target=target-1
+                a+=1
+            if maxDoubles!=0 and target%2==0:
+                target=target//2
+                a+=1
+                maxDoubles-=1
+            if maxDoubles==0:
+                a=a+target-1
+                break
+        return a 
+        #時間複雜度:O(min(maxDoubles, log(target)))因為我是用兩個if 寫又比用if else更快一點，就像用example1來看我跑一次迴圈會直接從5變成2。
+        #空間複雜度是O(1)
+        

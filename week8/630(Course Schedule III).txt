@@ -1,0 +1,20 @@
+class Solution:
+    def scheduleCourse(self, courses: List[List[int]]) -> int:
+        #時間複雜度：O(nlogn),排序和(for迴圈＋heapqpush/pop)
+        #空間複雜度：O(n)
+        #先按照deadline把要deadline排在前面
+        courses.sort(key=lambda x: x[1])
+
+        time = 0      
+        max_heap = [] #用來存目前有幾門課能上
+
+        for duration, lastDay in courses:
+            time+=duration
+            heapq.heappush(max_heap, -duration)#加上負號最大的就會放在前面
+            
+            #時間不夠把最大的踢出去這樣可以塞下更多還沒deadline的課程
+            if time > lastDay:
+                a=heapq.heappop(max_heap)
+                time+=a
+
+        return len(max_heap)
