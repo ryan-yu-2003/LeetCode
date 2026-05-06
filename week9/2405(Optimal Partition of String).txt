@@ -1,0 +1,14 @@
+class Solution:
+    def partitionString(self, s: str) -> int: 
+        #用一個set紀錄有幾個不同字串在裡面了，如果遇到在裡面了則清空set，加一表示要在這裡切開
+        #時間複雜度：O(n)，空間複雜度：O(1)，因為英文字母是固定的最多就是26個
+        count=1
+        seen=set()
+        for char in s:
+            if char in seen:
+                count+=1
+                seen.clear()                
+            seen.add(char)
+            
+            
+        return count

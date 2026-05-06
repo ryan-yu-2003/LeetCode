@@ -1,0 +1,15 @@
+class Solution:
+    def minSwapsCouples(self, row: List[int]) -> int:
+        #掃過一遍檢查身邊人是不是伴侶不是就和伴侶那個位置交換
+        #時間複雜度：O(n＾2)，因為要找伴侶在哪個位置然後換到身邊所以要掃過row
+        #空間複雜度：O(1)
+        n=len(row)
+        count=0
+        for i in range(0,n,2):
+            if row[i+1]!=(row[i]^1):
+                partner_idx = row.index(row[i]^1)
+                row[i+1], row[partner_idx] = row[partner_idx], row[i+1]
+                count+=1
+
+        return count
+        #也可以用dictionary來記錄每個人的位置這樣就不用row.index，用空間換時間，時間複雜度會變成O(n)，空間複雜度會變成O(n)
