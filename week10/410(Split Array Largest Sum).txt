@@ -1,0 +1,32 @@
+class Solution:
+    def splitArray(self, nums: List[int], k: int) -> int:
+        #binary search + greedy
+        left = max(nums)#k=1
+        right = sum(nums)#k=len(nums)
+        
+        while left < right:
+            mid = (left + right) // 2
+            
+            # Greedy
+            count = 1        
+            current_sum = 0  
+            
+            for num in nums:
+                if current_sum + num > mid:
+                    # 裝不下了，換下一個
+                    count += 1
+                    # 把目前的裝到下一個
+                    current_sum = num
+                else:
+                    current_sum += num
+            
+            # Binary search
+            if count <= k:
+                # 表示還可以再更小分更多
+                right = mid
+            else:
+                # 分裝容量不夠要再大
+                left = mid + 1
+            #時間複雜度：O(nlog(sum(nums)-max(nums)))
+            #空間複雜度：O(1)
+        return left

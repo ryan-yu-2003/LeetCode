@@ -1,0 +1,19 @@
+class Solution:
+    def minPatches(self, nums: List[int], n: int) -> int:
+        #用miss 來代表還不能組成的數字
+        miss=1
+        patch=0
+        i=0
+        while miss<=n:
+            #miss比這個數字大表示可以組成他直接加上去更新miss
+            if i<len(nums) and miss>=nums[i]:
+                miss+=nums[i]
+                i+=1
+            #還不能組成這個數字所以patch miss進去然後更新miss直到可以組成nums[i]
+            else:
+                patch+=1
+                miss+=miss
+        
+        return patch
+        #空間複雜度：O(1)
+        #時間複雜度：因為while迴圈不是掃過array就是加上自己(乘二)，那如果是掃過array就會是O(len(nums))而如果是一直加自己然後超過n就會是O(logn)所以worse case就是掃完之後還不能滿足miss>n還要一直加上自己，O(len(nums)+logn)

@@ -1,0 +1,16 @@
+class Solution:
+    def canCompleteCircuit(self, gas: List[int], cost: List[int]) -> int:
+        #時間複雜度O(n)，空間複雜度O(1)
+        if sum(gas)<sum(cost):
+            return -1
+        start = 0
+        current = 0
+        n=len(gas)
+        for i in range (n):
+            current+= gas[i] - cost[i]
+            if current < 0:
+                # 前面全部不要，從下一個位子重新開始
+                start = i + 1
+                current = 0
+        return start
+        
