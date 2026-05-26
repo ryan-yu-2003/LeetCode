@@ -1,0 +1,42 @@
+class Solution:
+    def findUnsortedSubarray(self, nums: List[int]) -> int:
+        '''最一開始的想法用sort來找位置
+        new_nums=sorted(nums)
+        n=len(nums)
+        #用來記錄哪個位置不一樣
+        x1=0
+        x2=0 
+        for i in range (n):
+            if nums[i]!=new_nums[i]:
+                x1=i
+                break
+        for i in range(n-1,-1,-1):
+            if nums[i]!=new_nums[i]:
+                x2=i
+                break
+
+        if x1!=0 or x2!=0:
+            return x2-x1+1
+        return x2-x1'''
+        '''不用sort也能找'''
+        #時間複雜度從O(nlogn)變成O(n)
+        #空間複雜度從O(n)變成O(1)
+        n=len(nums)
+        #用來記錄哪個位置不一樣
+        x1=0
+        x2=0
+        max_seen=float('-inf')
+        min_seen=float('inf')
+        for i in range (n):
+            if nums[i]<max_seen:
+                x1=i
+            else:
+                max_seen=nums[i]
+        for i in range(n-1,-1,-1):
+            if nums[i]<=min_seen:
+                min_seen=nums[i]
+            else:
+                x2=i
+        if x1!=0 or x2!=0:
+            return x1-x2+1
+        return x2-x1

@@ -1,0 +1,33 @@
+class Solution:
+    from functools import cache
+    def removeBoxes(self, boxes: List[int]) -> int:
+        #賊難
+        #k個相同的方塊，case1:要現在消掉，case2把中間清空，去跟下一個同伴合併
+        '''
+        Top-Down DP
+        時間複雜度：i,j,k的時間複雜度都是O(N)，用了cache所以只需要去看dfs裡主要是for迴圈在主導O(N)，總時間複雜度是O(N^4)
+        空間複雜度：用到cache紀錄i、j、k三種狀態所以是O(N^3)然後是呼叫dfs的O(N)，總時間複雜度是O(N^3)
+        '''
+        @cache
+        def dfs(i: int, j: int, k: int) -> int:
+            if i > j:
+                return 0
+            
+            # 把連續相同的顏色綁在一塊
+            # 只要下一個跟現在這個顏色一樣，我們就把 i 往右移，並增加 k
+            while i < j and boxes[i] == boxes[i + 1]:
+                i += 1
+                k += 1
+                
+            # case1:直接消除
+            res = (k + 1) * (k + 1) + dfs(i + 1, j, 0)
+            
+            # case2:把中間清空，去跟下一個同伴合併
+            for m in range(i + 1, j + 1):
+                if boxes[i] == boxes[m]:
+                    # 把中間 (i+1 到 m-1) 清空，
+                    score = dfs(i + 1, m - 1, 0) + dfs(m, j, k + 1)
+                    res = max(res, score)
+                    
+            return res
+        return dfs(0, len(boxes) - 1, 0)

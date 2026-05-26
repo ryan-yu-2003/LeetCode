@@ -1,0 +1,27 @@
+class Solution:
+    def canCross(self, stones: List[int]) -> bool:
+        for i in range(1, len(stones)):
+            if stones[i] - stones[i-1] > i:
+               return False 
+        # 建立 Hash Map  搭配 Set
+        # 把每顆石頭的位置當作 Key，Value 是空的 Set
+        dp = {stone: set() for stone in stones}
+        
+        # 狀態初始化：青蛙在位置 0，假裝跳了 0 步來到這
+        dp[0].add(0)
+        
+        # 依序處理每一顆石頭
+        for stone in stones:
+            # 取出這顆石頭 Set 裡面的每一個合法步伐 k
+            for k in dp[stone]:
+                # 根據步伐 k，產生三種距離
+                for step in [k-1, k , k+1]:
+                    
+                    # 步伐必須大於 0，且落腳點有石頭
+                    if step > 0 and (stone + step) in dp:
+                        dp[stone + step].add( step )
+                        
+        # 檢查最後一顆石頭的 Set 裡有沒有東西
+        return len(dp[ stones[-1]]) > 0
+        #時間複雜度O(N^2)
+        #空間複雜度O(N^2)
