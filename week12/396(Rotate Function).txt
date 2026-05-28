@@ -1,0 +1,20 @@
+class Solution:
+    def maxRotateFunction(self, nums: List[int]) -> int:
+        #找規律從f(1)=f(0)+_ ，f(2)=f(1)+_
+        #F(k) = F(k-1) + Sum - N * (被移到前面的數字)
+        #時間複雜度：O(N)
+        #空間複雜度：O(1)
+        n=len(nums)
+        array_sum = sum(nums)
+        current_f = 0
+        for i in range(n):
+            current_f += i * nums[i]
+            
+        max_f = current_f
+        
+        for i in range(n - 1, 0, -1):
+            # F(k) = F(k-1) + Sum - N * (被移到前面的數字)
+            current_f = current_f + array_sum - n * nums[i]
+            max_f = max(max_f, current_f)
+            
+        return max_f

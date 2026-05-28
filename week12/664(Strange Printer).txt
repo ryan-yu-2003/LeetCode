@@ -1,0 +1,42 @@
+from functools import cache
+class Solution:
+    def strangePrinter(self, s: str) -> int:
+        s = re.sub(r'(.)\1+', r'\1', s)
+        @cache
+        def dfs(i: int, j: int) -> int:
+            # 左邊界大於右邊界
+            if i > j:
+                return 0
+            
+            # 只有一個字元 
+            if i == j:
+                return 1
+                
+            # case1:頭尾字母一樣
+            # 只需要算出印左邊到倒數第二個的次數就行
+            if s[i] == s[j]:
+                return dfs( i , j-1 )
+            
+            # 4. case2:頭尾字母不一樣
+            #右邊那個字自己印一次
+            res = dfs(i, j - 1) + 1
+            
+            for k in range(i, j):
+                if s[k] == s[j]:
+                    res = min(res, dfs(i, k) + dfs(k + 1, j - 1))
+                
+                
+            return res
+            
+        return dfs(0, len(s) - 1)
+        '''
+        帶有記憶化的 Divide and Conquer，當區間縮小到空字串回傳 0，單一字母回傳 1。
+        Case 1
+        如果頭尾一樣，不增加任何次數，直接往內壓縮 ( dfs(i, j-1) )
+        Case 2
+        如果頭尾不一樣，先做最壞打算把尾巴單獨印 ( +1 )，然後從中間找跟尾巴一樣的地方切開，把大問題拆成兩個小問題，找出花費最少的切法。
+        要記錄 i j兩種狀態   
+        時間複雜度：O(M^3)   
+        空間複雜度：O(M^2)
+        M是經過res壓縮後的s長度
+        '''
