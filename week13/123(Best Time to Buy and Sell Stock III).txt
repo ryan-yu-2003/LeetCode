@@ -1,0 +1,25 @@
+class Solution:
+    def maxProfit(self, prices: List[int]) -> int:
+        if not prices:
+            return 0
+        #最多兩次交易
+        buy1=buy2=float('-inf')
+        sell1=sell2=0
+
+        for price in prices:
+            #第一次買入股票（找成本最低點）
+            buy1=max(buy1,-price)
+            #第一次賣股票
+            sell1=max(sell1,buy1+price)
+            #第二次買入股票，建立在第一次獲利上，這樣就不會買了沒賣掉又買的問題
+            buy2=max(buy2,sell1-price)
+            #第二次賣股票
+            sell2=max(sell2,buy2+price)
+
+        return sell2
+        '''
+        時間複雜度：O(N)
+        空間複雜度：O(1)
+        '''
+
+        
