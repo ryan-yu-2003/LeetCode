@@ -3,7 +3,7 @@ class Solution:
         #一隻豬可以測試幾輪
         rounds = minutesToTest // minutesToDie
         '''
-        rounds＋1就是一隻豬可以代表的狀態
+        rounds＋1就是一隻豬可以代表的狀態https://github.com/ryan-yu-2003/LeetCode/blob/main/week14/458(Poor%20Pigs).txt
         像是如果是四輪那豬一輪喝一個如果會死就表示有一個是毒沒死就表示最後一個bucket有毒，可以測試5個buckets。這情況下如果兩隻豬則可以測5*5=25 buckets'''
         base=rounds+1
         pig=0
@@ -12,6 +12,6 @@ class Solution:
 
         return pig 
         '''
-        時間複雜度:O(buckets) ，看while迴圈那邊，base^pig=buckets =>pig*log base為底(base)=log(buckets)=>pig=log(buckets)
+        時間複雜度:O(log(buckets)) ，看while迴圈那邊，base^pig=buckets =>pig*log base為底(base)=log(buckets)=>pig=log(buckets)
         空間複雜度:O(1)
         '''
