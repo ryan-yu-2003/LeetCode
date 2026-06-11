@@ -1,0 +1,36 @@
+class Solution:
+    def makeArrayIncreasing(self, arr1: List[int], arr2: List[int]) -> int:
+        '''
+        原本的想法是用greedy 來看arr1從第二個看到倒數第二個，如果不符合arr1[i-1]<arr1[i]<arr1[i+1]
+        就去排序好的arr2找比arr1[i-1]大的第一個數替換，但發現這樣看局部最佳解沒辦法解這題，像是
+        arr1=[1,8,9,3] arr2[2,3] 用greedy就無解但其實上帝視角是有解換兩次就行，後來選擇用DP
+        '''
+        # arr2 排序，去掉重複的數字
+        arr2 = sorted(list(set(arr2)))
+        
+        @cache
+        def dfs(i: int, prev: int) -> int:
+            # Base Case：完全符合從小到大
+            if i == len(arr1):
+                return 0
+            
+            # 初始化用來記錄最少次數
+            ans = float('inf')
+            
+            # 比前面的數字大，沒問題
+            if arr1[i] > prev:
+
+                ans = min(ans, dfs(i + 1, arr1[i])) #繼續走下去然後記錄新的最小
+                
+            # 用 bisect_right 在 arr2 裡找第一個大於 prev的數字
+            idx = bisect.bisect_right(arr2, prev)
+            
+            if idx < len(arr2):
+                # 把交換過來的 arr2[idx] 當新的 prev 然後操作＋＝1
+                ans = min(ans, 1 + dfs(i + 1, arr2[idx]))
+                
+            return ans
+            
+        result = dfs(0, -1)
+        
+        return result if result != float('inf') else -1
